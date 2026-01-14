@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Strategic Command System - NIEMS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/white.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --niems-navy: #1a365d;
+            --niems-blue: #2b6cb0;
+            --niems-light: #e2e8f0;
+            --niems-accent: #ed8936;
+        }
+
+        .reveal {
+            font-family: 'Sarabun', sans-serif;
+            font-size: 28px;
+            color: #2d3748;
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4 {
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 600;
+            color: var(--niems-navy);
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .reveal h1 {
+            font-size: 2.2em;
+            border-bottom: 4px solid var(--niems-blue);
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+
+        .reveal h2 {
+            font-size: 1.6em;
+            margin-bottom: 30px;
+        }
+
+        .reveal h3 {
+            font-size: 1.3em;
+            color: var(--niems-blue);
+        }
+
+        .reveal h4 {
+            font-size: 1.1em;
+            color: var(--niems-navy);
+            margin-bottom: 10px;
+        }
+
+        .reveal section {
+            text-align: left;
+        }
+
+        .reveal ul {
+            margin-left: 30px;
+        }
+
+        .reveal ul li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .reveal ul li::marker {
+            color: var(--niems-blue);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid var(--niems-blue);
+            margin-bottom: 20px;
+        }
+
+        .card.highlight {
+            border-left-color: var(--niems-accent);
+            background: linear-gradient(135deg, #fffaf0 0%, #fff 100%);
+        }
+
+        .card.problem {
+            border-left-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .card.value {
+            border-left-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .step-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--niems-blue);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-box .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: #f7fafc;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+        }
+
+        .step-box h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.9em;
+            color: var(--niems-navy);
+        }
+
+        .step-box p {
+            font-size: 0.65em;
+            color: #718096;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: var(--niems-blue);
+            align-self: center;
+            opacity: 0.5;
+        }
+
+        .browser-frame {
+            background: #f7fafc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .browser-header {
+            background: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red {
+            background: #ff5f56;
+        }
+
+        .dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .dot.green {
+            background: #27c93f;
+        }
+
+        .browser-bar {
+            flex: 1;
+            background: white;
+            border-radius: 4px;
+            padding: 5px 12px;
+            font-size: 0.6em;
+            color: #666;
+        }
+
+        .screenshot-img {
+            width: 100%;
+            display: block;
+        }
+
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75em;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-table th {
+            background: var(--niems-navy);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+        }
+
+        .pricing-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pricing-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .recommend {
+            background: #ebf8ff !important;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        .tag.blue {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .tag.green {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .tag.orange {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        .footer-note {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6em;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ==================== หน้าปก (Cover Slide) ==================== -->
+            <!-- ==================== หน้าปก (Cover Slide) ==================== -->
+            <section style="text-align: center;"
+                data-background-gradient="linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)">
+
+                <div
+                    style="color: rgba(255,255,255,0.7); font-size: 0.5em; letter-spacing: 4px; margin-bottom: 20px; font-weight: 500;">
+                    NATIONAL INSTITUTE FOR EMERGENCY MEDICINE
+                </div>
+
+                <h1
+                    style="color: white; font-size: 2.5em; font-weight: 800; line-height: 1.2; margin-bottom: 20px; text-shadow: 0 10px 30px rgba(0,0,0,0.3); border-bottom: none;">
+                    STRATEGIC COMMAND<br><span style="color: #63b3ed;">SYSTEM</span>
+                </h1>
+
+                <div style="width: 60px; height: 6px; background: #63b3ed; margin: 40px auto; border-radius: 3px;">
+                </div>
+
+                <p
+                    style="font-size: 1.3em; color: rgba(255,255,255,0.9); font-weight: 300; letter-spacing: 0.5px; margin-bottom: 10px;">
+                    "Transforming Risk into Readiness"
+                </p>
+                <p style="font-size: 1.1em; color: rgba(255,255,255,0.7); font-weight: 400;">
+                    เปลี่ยนความเสี่ยง... เป็นความพร้อม
+                </p>
+                <div style="font-size: 0.9em; color: rgba(255,255,255,0.6); margin-top: 50px;">
+                    2026 Executive Strategy Brief
+                </div>
+            </section>
+
+            <!-- ==================== 1. Summary ==================== -->
+            <section>
+                <section>
+                    <h2>1. Summary: ภาพรวมสำหรับผู้บริหาร</h2>
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h3 style="font-size: 1.3em; margin-bottom: 20px; color: #4a5568;">Strategic Command System
+                            คืออะไร?</h3>
+
+                        <!-- Powered by Notion Badge -->
+                        <div
+                            style="display: inline-flex; align-items: center; background: #fff; padding: 10px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 35px; border: 1px solid #e2e8f0;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png"
+                                alt="Notion"
+                                style="height: 35px; margin: 0; margin-right: 12px; background: transparent;">
+                            <span
+                                style="font-size: 0.85em; color: #2d3748; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Powered
+                                by <strong>Notion</strong></span>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;">
+                            <!-- Feature 1 -->
+                            <div
+                                style="background: white; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-bottom: 5px solid var(--niems-blue);">
+                                <div style="font-size: 3.5em; margin-bottom: 20px;">🏛️</div>
+                                <h4 style="font-size: 0.9em; margin-bottom: 15px;">Centralized HUB</h4>
+                                <p style="font-size: 0.65em; color: #718096; line-height: 1.6;">
+                                    <strong>ศูนย์กลางเดียว</strong> สำหรับการสั่งการ<br>ติดตาม
+                                    และรายงานผล<br>เชิงยุทธศาสตร์ทั้งองค์กร
+                                </p>
+                            </div>
+
+                            <!-- Feature 2 -->
+                            <div
+                                style="background: white; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-bottom: 5px solid var(--niems-accent);">
+                                <div style="font-size: 3.5em; margin-bottom: 20px;">🔗</div>
+                                <h4 style="font-size: 0.9em; margin-bottom: 15px;">Alignment</h4>
+                                <p style="font-size: 0.65em; color: #718096; line-height: 1.6;">
+                                    <strong>เชื่อมโยงนโยบาย</strong>
+                                    สู่โครงการ<br>และการปฏิบัติจริงของทุกสำนัก<br>ให้เป็นไปในทิศทางเดียวกัน
+                                </p>
+                            </div>
+
+                            <!-- Feature 3 -->
+                            <div
+                                style="background: white; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-bottom: 5px solid #48bb78;">
+                                <div style="font-size: 3.5em; margin-bottom: 20px;">📊</div>
+                                <h4 style="font-size: 0.9em; margin-bottom: 15px;">Real-time Insight</h4>
+                                <p style="font-size: 0.65em; color: #718096; line-height: 1.6;">
+                                    แสดงสถานะความพร้อม<br><strong>แบบ Real-time</strong><br>เพื่อการตัดสินใจที่แม่นยำ
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        style="margin-top: 50px; text-align: center; color: #a0aec0; font-size: 0.6em; animation: bounce 2s infinite;">
+                        กดลูกศร ▼ เพื่อดูปัญหา vs สิ่งที่จะได้รับ
+                    </div>
+                </section>
+
+                <section>
+                    <h3>From Pain to Gain: สิ่งที่จะเปลี่ยนไป</h3>
+                    <div class="two-col" style="align-items: stretch;">
+
+                        <!-- Problem Side -->
+                        <div class="card" style="border-left: 6px solid #e53e3e; background: #fff5f5; padding: 30px;">
+                            <h4
+                                style="color: #c53030; display: flex; align-items: center; gap: 10px; margin-bottom: 25px;">
+                                <span
+                                    style="background: #fed7d7; padding: 5px 10px; border-radius: 50%; font-size: 0.8em;">⛔</span>
+                                Current Pain
+                            </h4>
+                            <ul style="font-size: 0.75em; color: #742a2a; line-height: 1.8;">
+                                <li>สั่งการ/ติดตามงานผ่าน <strong>หลายช่องทาง</strong> (LINE/Paper)</li>
+                                <li>ผู้บริหาร <strong>ไม่เห็นภาพรวม</strong> สถานะจริง</li>
+                                <li>ข้อมูล <strong>กระจัดกระจาย</strong> ตัดสินใจยาก</li>
+                                <li>ความเสี่ยงหลุดประเด็น <strong>เชิงนโยบาย</strong></li>
+                            </ul>
+                        </div>
+
+                        <!-- Solution Side -->
+                        <div class="card" style="border-left: 6px solid #38a169; background: #f0fff4; padding: 30px;">
+                            <h4
+                                style="color: #276749; display: flex; align-items: center; gap: 10px; margin-bottom: 25px;">
+                                <span
+                                    style="background: #c6f6d5; padding: 5px 10px; border-radius: 50%; font-size: 0.8em;">✅</span>
+                                Future Gain
+                            </h4>
+                            <ul style="font-size: 0.75em; color: #22543d; line-height: 1.8;">
+                                <li>รวมศูนย์การสั่งการ <strong>ในระบบเดียว</strong></li>
+                                <li>Dashboard แสดงผล <strong>Real-time</strong></li>
+                                <li>ข้อมูลเชื่อมโยง <strong>ตรวจสอบได้</strong> ทันที</li>
+                                <li>มั่นใจว่าทุกนโยบายถูก <strong>ขับเคลื่อนจริง</strong></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+            </section>
+
+            <!-- ==================== 2. User Journey ==================== -->
+            <section>
+                <h2>2. User Journey: เส้นทางการใช้งานระบบ</h2>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;">
+                    <div class="step-box" style="flex: 1;">
+                        <div class="icon">📣</div>
+                        <h4>สั่งการเชิงนโยบาย</h4>
+                        <p>ผู้บริหารกำหนดทิศทาง</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step-box" style="flex: 1;">
+                        <div class="icon">📋</div>
+                        <h4>แปลงเป็นโครงการ</h4>
+                        <p>แปลนโยบายสู่ภารกิจ</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step-box" style="flex: 1;">
+                        <div class="icon">👥</div>
+                        <h4>มอบหมายงาน</h4>
+                        <p>กระจายให้แต่ละสำนัก</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step-box" style="flex: 1;">
+                        <div class="icon">📊</div>
+                        <h4>ติดตามสถานะ</h4>
+                        <p>Real-time Monitoring</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="step-box" style="flex: 1;">
+                        <div class="icon">📈</div>
+                        <h4>สรุปรายงาน</h4>
+                        <p>ประกอบการตัดสินใจ</p>
+                    </div>
+                </div>
+                <div class="card highlight" style="text-align: center;">
+                    <p style="margin: 0;"><strong>📸 แนะนำ:</strong> แทรกภาพหน้าจอจาก <a
+                            href="https://www.notion.so/Strategic-Command-System-2e0d556ee986817b914cdd492be783c2"
+                            target="_blank">Notion URL หลัก</a> แสดงการไหลของงานจริง</p>
+                </div>
+            </section>
+
+            <!-- ==================== 3. System Screens ==================== -->
+            <section>
+                <section>
+                    <h2>3. หน้าจอหลักของระบบ (System Screens)</h2>
+                    <div class="three-col">
+                        <div class="card" style="text-align: center;">
+                            <div style="font-size: 2.5em; margin-bottom: 15px;">📊</div>
+                            <h4>Dashboard ภาพรวม</h4>
+                            <p style="font-size: 0.8em; color: #666;">สถานะโครงการ / ตัวชี้วัด / มุมมองผู้บริหาร</p>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <div style="font-size: 2.5em; margin-bottom: 15px;">📋</div>
+                            <h4>Project / Task</h4>
+                            <p style="font-size: 0.8em; color: #666;">บริหารโครงการ / มอบหมาย / ติดตาม</p>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <div style="font-size: 2.5em; margin-bottom: 15px;">🎯</div>
+                            <h4>Strategic Overview</h4>
+                            <p style="font-size: 0.8em; color: #666;">มุมมองยุทธศาสตร์ / สรุปผล / ทิศทาง</p>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px; font-size: 0.8em; color: #718096;">กดลูกศรลง ▼
+                        เพื่อดูภาพหน้าจอแต่ละส่วน</p>
+                </section>
+
+                <!-- 3.1 Dashboard -->
+                <section>
+                    <h3>3.1 Dashboard ภาพรวม</h3>
+                    <div class="two-col">
+                        <div>
+                            <ul>
+                                <li><strong>สถานะโครงการทั้งหมด</strong> (In Progress / Done)</li>
+                                <li><strong>ตัวชี้วัดสำคัญ</strong> (Progress / Risk / Priority)</li>
+                                <li><strong>มุมมองสำหรับผู้บริหาร</strong> (Executive View)</li>
+                                <li>สรุปงบประมาณและความคืบหน้า</li>
+                            </ul>
+                            <div class="card highlight" style="font-size: 0.8em;">
+                                <strong>📸 แทรกภาพ:</strong> Dashboard จาก<br>
+                                <a href="https://www.notion.so/Strategic-Command-System-2e0d556ee986817b914cdd492be783c2"
+                                    style="font-size: 0.9em;">Notion: Strategic Command System</a>
+                            </div>
+                        </div>
+                        <div class="browser-frame">
+                            <div class="browser-header">
+                                <div class="browser-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div>
+                                </div>
+                                <div class="browser-bar">strategic-command.niems.go.th/dashboard</div>
+                            </div>
+                            <div class="screenshot-placeholder">
+                                <img src="dashboard_main.png" alt="Dashboard Screenshot" class="screenshot-img">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3.2 Project Management -->
+                <section>
+                    <h3>3.2 Project / Task Management</h3>
+                    <div class="two-col">
+                        <div>
+                            <ul>
+                                <li><strong>บริหารโครงการและภารกิจ</strong></li>
+                                <li><strong>มอบหมายงาน</strong>และติดตามความคืบหน้า</li>
+                                <li><strong>เชื่อมโยงงานกับนโยบาย</strong></li>
+                                <li>ดูรายละเอียด: ผู้รับผิดชอบ, สถานะ, กำหนดส่ง</li>
+                            </ul>
+                            <div class="card highlight" style="font-size: 0.8em;">
+                                <strong>📸 แทรกภาพ:</strong> ตารางโครงการจาก<br>
+                                <a href="https://www.notion.so/2e1d556ee986800ab5c4e8b26fb1a82d?v=2e1d556ee986819d92ba000c64c355b2"
+                                    style="font-size: 0.9em;">Notion: รายงานผลรองเลขาฯ / ผอ.</a>
+                            </div>
+                        </div>
+                        <div class="browser-frame">
+                            <div class="browser-header">
+                                <div class="browser-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div>
+                                </div>
+                                <div class="browser-bar">strategic-command.niems.go.th/projects</div>
+                            </div>
+                            <div class="screenshot-placeholder">
+                                <img src="project_table.png" alt="Project Table Screenshot" class="screenshot-img">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3.3 Strategic Overview -->
+                <section>
+                    <h3>3.3 Strategic Overview</h3>
+                    <div class="two-col">
+                        <div>
+                            <ul>
+                                <li><strong>มุมมองเชิงยุทธศาสตร์</strong></li>
+                                <li><strong>สรุปผลการดำเนินงาน</strong>ในระดับองค์กร</li>
+                                <li>ใช้ข้อมูลเพื่อ<strong>กำหนดทิศทาง</strong>ในอนาคต</li>
+                                <li>เชื่อมโยงเป้าหมายสู่ผลลัพธ์</li>
+                            </ul>
+                            <div class="card highlight" style="font-size: 0.8em;">
+                                <strong>📸 แทรกภาพ:</strong> Strategic Map หรือ Summary View จาก Notion
+                            </div>
+                        </div>
+                        <div class="browser-frame">
+                            <div class="browser-header">
+                                <div class="browser-dots">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div>
+                                </div>
+                                <div class="browser-bar">strategic-command.niems.go.th/strategy</div>
+                            </div>
+                            <div class="screenshot-placeholder">
+                                <img src="dashboard_main.png" alt="Strategic Overview Screenshot" class="screenshot-img"
+                                    style="transform: scale(1.1); transform-origin: top center;">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ==================== 4. Notification & Communication ==================== -->
+            <section>
+                <h2 style="font-size: 1.4em; margin-bottom: 20px;">4. Notification & Communication</h2>
+                <div class="two-col" style="gap: 20px;">
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="card" style="padding: 15px 20px; margin-bottom: 0;">
+                            <h4 style="font-size: 0.95em; margin-bottom: 8px;">📌 @ Mention: สั่งการตรงถึงผู้รับผิดชอบ
+                            </h4>
+                            <ul style="margin: 0; font-size: 0.85em; line-height: 1.5;">
+                                <li><strong>@ผอ.สำนักยุทธศาสตร์</strong> → สั่งการอัปเดตโครงการ</li>
+                                <li><strong>@ผอ.สำนักบริหาร</strong> → ประสานงบประมาณ</li>
+                            </ul>
+                        </div>
+                        <div class="card" style="padding: 15px 20px; margin-bottom: 0;">
+                            <h4 style="font-size: 0.95em; margin-bottom: 8px;">📧 Email Alert: แจ้งเตือนอัตโนมัติ</h4>
+                            <ul style="margin: 0; font-size: 0.85em; line-height: 1.5;">
+                                <li>แจ้งเตือนเมื่อถูก Mention ในระบบ</li>
+                                <li>ส่งตรงถึง Gmail ทันที</li>
+                            </ul>
+                        </div>
+                        <div class="card highlight" style="padding: 12px 15px; margin-bottom: 0; font-size: 0.75em;">
+                            <strong>💬 ตัวอย่างข้อความจริงในระบบ:</strong><br>
+                            <em style="color: #555;">"เรียน @ผอ.สบพก @ผอ.สบพ1 @ผอ.สบพ2 @ผอ.สบพ3 @ผอ.สบพ4
+                                ช่วยตรวจสอบข้อมูลให้เป็นปัจจุบันและส่งให้ทาง @ผอ.สดท ด้วยครับ"</em>
+                        </div>
+                    </div>
+                    <div class="browser-frame" style="height: fit-content;">
+                        <div class="browser-header" style="padding: 8px 12px;">
+                            <div class="browser-dots">
+                                <div class="dot red"></div>
+                                <div class="dot yellow"></div>
+                                <div class="dot green"></div>
+                            </div>
+                            <div class="browser-bar" style="font-size: 0.55em;">notion.so/strategic-performance-system
+                            </div>
+                        </div>
+                        <img src="notion_comment.png" alt="Notion Comment Screenshot"
+                            style="width: 100%; display: block;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 5. Pricing Comparison ==================== -->
+            <section>
+                <h2 style="font-size: 1.4em; margin-bottom: 20px;">5. Pricing Comparison: เปรียบเทียบแพ็กเกจ</h2>
+                <style>
+                    .pricing-grid {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 15px;
+                        margin-top: 10px;
+                        align-items: stretch;
+                        padding: 10px;
+                    }
+
+                    .pricing-col {
+                        background: white;
+                        border-radius: 12px;
+                        padding: 15px 12px;
+                        box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.1);
+                        border: 1px solid #edf2f7;
+                        display: flex;
+                        flex-direction: column;
+                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .pricing-col:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.1);
+                        border-color: #cbd5e0;
+                    }
+
+                    /* Top Accent Borders */
+                    .pricing-col.free {
+                        border-top: 5px solid #cbd5e0;
+                    }
+
+                    .pricing-col.plus {
+                        border-top: 5px solid var(--niems-blue);
+                    }
+
+                    .pricing-col.business {
+                        border-top: 5px solid var(--niems-accent);
+                    }
+
+                    .pricing-col.enterprise {
+                        border-top: 5px solid #2d3748;
+                    }
+
+                    .plan-header {
+                        text-align: center;
+                        margin-bottom: 10px;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #edf2f7;
+                    }
+
+                    .plan-name {
+                        font-size: 1.2em;
+                        font-weight: 800;
+                        margin-bottom: 5px;
+                        letter-spacing: -0.3px;
+                    }
+
+                    .pricing-col.free .plan-name {
+                        color: #718096;
+                    }
+
+                    .pricing-col.plus .plan-name {
+                        color: var(--niems-blue);
+                    }
+
+                    .pricing-col.business .plan-name {
+                        color: var(--niems-accent);
+                    }
+
+                    .pricing-col.enterprise .plan-name {
+                        color: #2d3748;
+                    }
+
+                    .plan-price {
+                        font-size: 1.6em;
+                        font-weight: 800;
+                        color: #1a202c;
+                        line-height: 1.1;
+                    }
+
+                    .plan-price span {
+                        font-family: 'Sarabun', sans-serif;
+                        font-weight: 500;
+                        vertical-align: middle;
+                    }
+
+                    .key-upgrade-badge {
+                        background: #f7fafc;
+                        border-radius: 6px;
+                        padding: 8px 10px;
+                        margin-bottom: 12px;
+                        text-align: left;
+                        position: relative;
+                    }
+
+                    /* Colored backgrounds for upgrades */
+                    .pricing-col.plus .key-upgrade-badge {
+                        background: #ebf8ff;
+                        color: var(--niems-blue);
+                    }
+
+                    .pricing-col.business .key-upgrade-badge {
+                        background: #fffaf0;
+                        color: var(--niems-accent);
+                    }
+
+                    .pricing-col.enterprise .key-upgrade-badge {
+                        background: #edf2f7;
+                        color: #2d3748;
+                    }
+
+                    .key-upgrade-badge h5 {
+                        margin: 0 0 2px 0;
+                        font-size: 0.75em;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        font-weight: 700;
+                        opacity: 0.9;
+                    }
+
+                    .key-upgrade-badge p {
+                        margin: 0;
+                        font-size: 0.85em;
+                        font-weight: 700;
+                        line-height: 1.3;
+                    }
+
+                    .feature-list {
+                        margin: 0;
+                        padding: 0;
+                        list-style: none;
+                        font-size: 0.75em;
+                        flex-grow: 1;
+                    }
+
+                    .feature-list li {
+                        margin-bottom: 6px;
+                        padding-left: 18px;
+                        position: relative;
+                        color: #4a5568;
+                        line-height: 1.3;
+                    }
+
+                    .feature-list li::before {
+                        content: "✓";
+                        position: absolute;
+                        left: 0;
+                        top: 1px;
+                        color: #48bb78;
+                        font-weight: 900;
+                        font-size: 1em;
+                    }
+
+                    .pricing-col.free .feature-list li::before {
+                        color: #cbd5e0;
+                    }
+                </style>
+
+                <div class="pricing-grid">
+                    <!-- FREE -->
+                    <div class="pricing-col free">
+                        <div class="plan-header">
+                            <div class="plan-name">Free</div>
+                            <div class="plan-price">฿0</div>
+                        </div>
+
+                        <div
+                            style="text-align: center; margin-bottom: 15px; color: #718096; font-size: 0.85em; font-style: italic; min-height: 40px; display: flex; align-items: center; justify-content: center;">
+                            สำหรับทดลองใช้งาน<br>หรือทีมขนาดเล็ก
+                        </div>
+
+                        <ul class="feature-list">
+                            <li><strong>เชิญ Guest ได้ 10 คน</strong></li>
+                            <li>ประวัติแก้ไข 7 วัน</li>
+                            <li>การเชื่อมต่อพื้นฐาน</li>
+                            <li style="color: #e53e3e;">จำกัดจำนวน Block</li>
+                        </ul>
+                    </div>
+
+                    <!-- PLUS -->
+                    <div class="pricing-col plus">
+                        <div class="plan-header">
+                            <div class="plan-name">Plus</div>
+                            <div class="plan-price">
+                                $10<span style="font-size: 0.4em; font-weight: normal;">/user/month</span>
+                                <div style="font-size: 0.45em; color: #718096; font-weight: 500; margin-top: 5px;">
+                                    (≈385บ. รวม VAT)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="key-upgrade-badge">
+                            <h5>จุดเด่น</h5>
+                            <p>ไม่จำกัด Block & ไฟล์</p>
+                        </div>
+
+                        <ul class="feature-list">
+                            <li><strong>เชิญ Guest ได้ 100 คน</strong></li>
+                            <li>ประวัติแก้ไข 30 วัน</li>
+                            <li><strong>ไม่จำกัดปริมาณข้อมูล</strong></li>
+                            <li>อัปโหลดไฟล์ไม่จำกัดขนาด</li>
+                        </ul>
+                    </div>
+
+                    <!-- BUSINESS -->
+                    <div class="pricing-col business">
+                        <div class="plan-header">
+                            <div class="plan-name">Business</div>
+                            <div class="plan-price">
+                                $15<span style="font-size: 0.4em; font-weight: normal;">/user/month</span>
+                                <div style="font-size: 0.45em; color: #718096; font-weight: 500; margin-top: 5px;">
+                                    (≈580บ. รวม VAT)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="key-upgrade-badge">
+                            <h5>จุดเด่น</h5>
+                            <p>ระบบ SSO & พื้นที่ส่วนตัว</p>
+                        </div>
+
+                        <ul class="feature-list">
+                            <li><strong>เชิญ Guest ได้ 250 คน</strong></li>
+                            <li>ประวัติแก้ไข 90 วัน</li>
+                            <li><strong>ระบบ Login องค์กร (SSO)</strong></li>
+                            <li>พื้นที่ส่วนตัวแยกแผนก</li>
+                            <li>Export PDF แบบ Bulk</li>
+                        </ul>
+                    </div>
+
+                    <!-- ENTERPRISE -->
+                    <div class="pricing-col enterprise">
+                        <div class="plan-header">
+                            <div class="plan-name">Enterprise</div>
+                            <div class="plan-price" style="font-size: 1.4em; padding-top: 10px;">ติดต่อ<br>ฝ่ายขาย</div>
+                        </div>
+
+                        <div class="key-upgrade-badge">
+                            <h5>จุดเด่น</h5>
+                            <p>ตรวจสอบ & ความปลอดภัย</p>
+                        </div>
+
+                        <ul class="feature-list">
+                            <li><strong>กำหนดจำนวน Guest เอง</strong></li>
+                            <li><strong>ประวัติแก้ไขไม่จำกัด</strong></li>
+                            <li>Audit Logs (ตรวจสอบการใช้งาน)</li>
+                            <li>ระบบจัดการ User (SCIM)</li>
+                            <li>ผู้ดูแลบัญชีส่วนตัว</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ==================== Closing Slide ==================== -->
+            <!-- ==================== Closing Slide ==================== -->
+            <section style="text-align: center;"
+                data-background-gradient="linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)">
+
+                <h1
+                    style="color: white; border: none; font-size: 2.5em; line-height: 1.4; font-weight: 700; text-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-bottom: 30px;">
+                    มากกว่าระบบ... คือ <span
+                        style="color: #63b3ed; text-decoration: underline; text-decoration-color: rgba(99,179,237,0.3);">กลยุทธ์</span><br>
+                    มากกว่าข้อมูล... คือ <span
+                        style="color: #48bb78; text-decoration: underline; text-decoration-color: rgba(72,187,120,0.3);">ความพร้อม</span>
+                </h1>
+
+                <p style="font-size: 1.5em; color: rgba(255,255,255,0.9); margin-bottom: 60px; font-weight: 300;">
+                    พร้อมยกระดับการบริหารสู่ยุคดิจิทัลอย่างแท้จริง
+                </p>
+
+                <div
+                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 30px 50px; border-radius: 20px; display: inline-block; border: 1px solid rgba(255,255,255,0.2);">
+                    <p style="font-size: 1.2em; color: white; margin: 0; font-weight: 600;">
+                        Strategic Command System
+                    </p>
+                    <p style="font-size: 0.9em; color: #a0aec0; margin: 5px 0 0 0;">
+                        National Institute for Emergency Medicine
+                    </p>
+                </div>
+
+                <div style="margin-top: 60px; font-size: 0.8em; color: rgba(255,255,255,0.4);">
+                    Thank You for Your Vision
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            width: 1280,
+            height: 720,
+            margin: 0.05,
+            transition: 'slide',
+            backgroundTransition: 'fade'
+        });
+    </script>
+</body>
+
+</html>
